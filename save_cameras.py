@@ -110,7 +110,7 @@ def save_opencv_camera_mesh(
         distance = distance[distance > 0]
         if len(distance) > 0:
             distance = np.sort(distance)
-            camera_size = distance[len(distance) // 10] * 0.25
+            camera_size = distance[len(distance) // 100] * 0.5
         else:
             camera_size = 1
         print(f"camera_size = {camera_size}")
@@ -144,8 +144,6 @@ def save_opencv_camera_mesh(
         [0, 4, 2],
         [0, 3, 4],
         [0, 1, 3],
-        [1, 4, 3],
-        [1, 2, 4],
         [5, 6, 7],
         [8, 9, 10],
     ]
