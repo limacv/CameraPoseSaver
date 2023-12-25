@@ -4,9 +4,10 @@ This script saves camera mesh from poses and intrinsics
 
 import numpy as np
 from typing import Optional, Union
+from functools import partial
 
 
-def save_opencv_camera_mesh(
+def _save_camera_mesh(    
     path: str,
     extrinsic: np.ndarray,
     intrinsic: Optional[np.ndarray] = None,
@@ -16,6 +17,9 @@ def save_opencv_camera_mesh(
     isc2w: bool = True,
     camera_size: Union[str, float] = "auto",
     near_far: Optional[np.ndarray] = None,
+    y_down: bool = True, 
+    z_forward: bool = True,
+    x_right: bool = True,
 ):
     """
     Args:
@@ -193,6 +197,12 @@ def save_opencv_camera_mesh(
             ]
 
         camera_vertices = np.array(camera_vertices).astype(np.float32) * camera_size
+        y = np.array([0, -1, 0]) if y_down else np.array([0, 1, 0])
+        z = np.array([0, 0, 1]) if z_forward else np.array([0, 0, -1])
+        x = np.cross(y, z)
+        camera_vertices[:, 0] *= (1 if x_right else -1)
+        camera_vertices[:, 1] *= (1 if y_down else -1)
+        camera_vertices[:, 2] *= (1 if z_forward else -1)
         camera_vertices = np.concatenate(
             [camera_vertices, np.ones_like(camera_vertices[:, :1])], axis=-1
         )
@@ -225,10 +235,19 @@ def _save_obj_with_vcolor(file, verts, colors, faces):
         f.write("\n")
 
 
+save_opencv_camera_mesh = partial(_save_camera_mesh, y_down=True, z_forward=True, x_right=True)
+save_colmap_camera_mesh = partial(_save_camera_mesh, y_down=True, z_forward=True, x_right=True)
+save_opengl_camera_mesh = partial(_save_camera_mesh, y_down=False, z_forward=False, x_right=True)
+save_blender_camera_mesh = partial(_save_camera_mesh, y_down=False, z_forward=False, x_right=True)
+
+
 if __name__ == "__main__":
     ext = np.eye(4)[None].repeat(1, 0)
     save_opencv_camera_mesh(
-        "mesh.obj",
+        "mesh_opencv.obj",
         ext
-
+    )
+    save_opengl_camera_mesh(
+        "mesh_opengl.obj",
+        ext
     )

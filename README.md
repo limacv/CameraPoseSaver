@@ -1,3 +1,7 @@
+# News! 
+
+Now several camera models are included including OpenGL and COLMAP
+
 # Saving 3D camera poses to mesh
 
 This repository implements a simple, dependency-free utility function that saves a set of camera poses into a mesh file.
@@ -10,4 +14,6 @@ The purpose of this repo is to provide an easy way to debug camera related 3D co
 It only contains single function that is well commented, 
 which is pretty straightforward to use.
 
-Currently only OpenCV camera space is implemented.
+Currently support camera poses:
+ - OpenCV / COLMAP
+ - OpenGL / Blender
