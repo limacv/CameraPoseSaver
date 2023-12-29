@@ -92,7 +92,7 @@ def _save_camera_mesh(
         intrinsic = np.broadcast_to(intrinsic, (ncamera, 3, 3))
 
     if HW is None:
-        HW = intrinsic[:, :2, 2] * 2
+        HW = intrinsic[:, [1, 0], 2] * 2
     else:
         HW = np.array(HW).astype(np.float32)
         if HW.ndim == 1:
